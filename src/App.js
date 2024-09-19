@@ -5,6 +5,8 @@ const initialItems = [
   { id: 2, description: "Socks", quantity: 12, packed: true },
 ];
 
+//this shoulb be merged
+
 export default function App() {
   return (
     <div className="app">
