@@ -22,7 +22,7 @@ export default function App() {
       <PackingLists items={items}/>
       <Stats />
     </div>
-  );
+  )
 }
 
 function Logo() {
