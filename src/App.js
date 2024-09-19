@@ -1,68 +1,110 @@
 import {useState} from 'react'
-import "./index.css";
+
+// const initialItems = [
+//   { id: 1, description: "Passports", quantity: 2, packed: false },
+//   { id: 2, description: "Socks", quantity: 12, packed: true },
+// ];
 
 //this shoulb be merged
 
 export default function App() {
+
+  const [items, setItems] =useState([])
+
+  function handelAddItem(item) {
+    setItems((items)=>[...items,item])
+  }
+
   return (
-    <div className="App">
-      <FlashCards />
+    <div className="app">
+      <Logo />
+      <Form onAddItems={handelAddItem}/>
+      <PackingLists items={items}/>
+      <Stats />
     </div>
   );
 }
 
-const questions = [
-  {
-    id: 3457,
-    question: "What language is React based on?",
-    answer: "JavaScript"
-  },
-  {
-    id: 7336,
-    question: "What are the building blocks of React apps?",
-    answer: "Components"
-  },
-  {
-    id: 8832,
-    question: "What's the name of the syntax we use to describe a UI in React?",
-    answer: "JSX"
-  },
-  {
-    id: 1297,
-    question: "How to pass data from parent to child components?",
-    answer: "Props"
-  },
-  {
-    id: 9103,
-    question: "How to give components memory?",
-    answer: "useState hook"
-  },
-  {
-    id: 2002,
-    question:
-      "What do we call an input element that is completely synchronised with state?",
-    answer: "Controlled element"
-  }
-];
+function Logo() {
+  return (
+    <h1>
+      🌲 Far away
+    </h1>
+    
+  )
+}
 
-function FlashCards() {
-  const [selectedId, setSelectedId] = useState(null)
+ 
 
-  function handleClick(id) {
-    setSelectedId(id !== selectedId ? id : null)
+function Form({onAddItems}) {
+
+  const [description, setDescription] = useState("")
+  const [quantity, setQuantity] = useState(1)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    if (!description) return  
+    const newItem = {id: Date.now(), description, quantity, packed: false}
+    console.log(newItem);
+
+    onAddItems(newItem)
+
+    setDescription("")
+    setQuantity(1)
+    
   }
 
   return (
-    <div className="flashcards" >
+    <form className="add-form" onSubmit={handleSubmit}>
 
-      {questions.map((question) =>
-        (<div key={question.id} 
-          onClick={() => handleClick(question.id)} 
-          className={question.id === selectedId ? "selected" : ""}  >
+      <h3>What do you need for your trip ?</h3>
 
-          <p>{question.id === selectedId ? question.answer : question.question}</p>
+      <select value={quantity} onChange={(e)=>setQuantity(Number(e.target.value))}>
+        {Array.from({length: 20},(_,i)=>i+1).map((num)=>(
+          <option value={num} key={num}>{num}</option>
+          ))}
+      </select>
 
-          </div>)
-      )}
-    </div>)
+      <input type="text" placeholder="Add item..." value={description}
+      onChange={(e)=>setDescription(e.target.value)}/>
+
+      <button>Add</button>
+    </form>
+    )
+
+}
+
+function PackingLists({items}) {
+  return (
+    <div className="list">
+
+      <ul>
+        {items.map((item) => (
+          <Item item={item} key={item.id} />))}
+      </ul>
+
+    </div>
+  )
+}
+
+function Item({ item }) {
+  return (
+  <li>
+    <span style={ item.packed ? { textDecoration: "line-through" } : {}}>
+      {item.description} {item.quantity}
+    </span>
+    <button>&times;</button>
+  </li>
+  )
+
+}
+
+function Stats() {
+  return (
+    <footer className="stats">
+      <em>
+        You have X items on your list, and you already packed x (X %)
+      </em>
+    </footer >)
 }
