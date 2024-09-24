@@ -9,7 +9,6 @@ export default function App() {
   );
 }
 
-//should this file
 
 const questions = [
   {
